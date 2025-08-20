@@ -1,0 +1,57 @@
+import time
+
+class VacuumCleaner:
+    def __init__(self, rooms):
+        # Initialize environment (A and B can be dirty or clean)
+        self.rooms = {room: "Dirty" for room in rooms}
+        self.position = rooms[0]  # always start at A
+        self.rooms_list = rooms
+
+    def show_environment(self):
+        print("\nEnvironment State:")
+        for room, state in self.rooms.items():
+            pos = " <-- Vacuum" if room == self.position else ""
+            print(f"{room}: {state}{pos}")
+        print()
+
+    def clean(self):
+        print(f"Vacuum is at {self.position}.")
+        if self.rooms[self.position] == "Dirty":
+            print(f"Cleaning {self.position}...")
+            self.rooms[self.position] = "Clean"
+        else:
+            print(f"{self.position} is already clean.")
+
+    def move(self):
+        current_index = self.rooms_list.index(self.position)
+        if current_index + 1 < len(self.rooms_list):
+            self.position = self.rooms_list[current_index + 1]
+            print(f"Vacuum moved to {self.position}.")
+        else:
+            print("Vacuum has finished checking all rooms.")
+
+    def all_clean(self):
+        return all(state == "Clean" for state in self.rooms.values())
+
+
+def run_vacuum():
+    rooms = ["A", "B"]  # two rooms
+    vacuum = VacuumCleaner(rooms)
+
+    print("Initial Environment:")
+    vacuum.show_environment()
+
+    steps = 0
+    while not vacuum.all_clean():
+        vacuum.clean()
+        vacuum.show_environment()
+        if not vacuum.all_clean():
+            vacuum.move()
+        steps += 1
+        time.sleep(1)
+
+    print(f"\nAll rooms are clean! ✅ Completed in {steps} steps.")
+
+
+if __name__ == "__main__":
+    run_vacuum()
